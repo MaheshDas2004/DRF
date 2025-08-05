@@ -14,6 +14,7 @@ from Blogs.serializers import BlogSerializer,CommentSerializer
 from Blogs.models import Blog,Comment
 
 from . paginations import CustomPagination
+from Employees.filters import CustomEmployeeFilter
 # Create your views here.
 # Function Based views
 @api_view(['GET','POST'])
@@ -179,10 +180,10 @@ class EmployeeViewSet(viewsets.ViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 """
 class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset=Employee.objects.all()
+    queryset=Employee.objects.all().order_by('id')
     serializer_class=EmployeeSerializers
     pagination_class=CustomPagination
-    filterset_fields=['designation']
+    filterset_class=CustomEmployeeFilter
     
 
 class BlogsView(generics.ListCreateAPIView):
