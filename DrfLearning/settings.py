@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Employees',
     'Blogs',
     'rest_framework',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -128,5 +129,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Global Pagination
 REST_FRAMEWORK={
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE':2
+    'PAGE_SIZE':2,
+    'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend'],
 }
