@@ -12,6 +12,8 @@ from rest_framework import mixins,generics,viewsets
 
 from Blogs.serializers import BlogSerializer,CommentSerializer
 from Blogs.models import Blog,Comment
+
+from . paginations import CustomPagination
 # Create your views here.
 # Function Based views
 @api_view(['GET','POST'])
@@ -179,6 +181,7 @@ class EmployeeViewSet(viewsets.ViewSet):
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset=Employee.objects.all()
     serializer_class=EmployeeSerializers
+    pagination_class=CustomPagination
 
 class BlogsView(generics.ListCreateAPIView):
     queryset=Blog.objects.all()
