@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'students',
     'Api',
     'Employees',
+    'Blogs',
     'rest_framework',
 ]
 

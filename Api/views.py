@@ -9,6 +9,9 @@ from rest_framework.views import APIView
 from Employees.models import Employee
 from django.http import Http404
 from rest_framework import mixins,generics,viewsets
+
+from Blogs.serializers import BlogSerializer,CommentSerializer
+from Blogs.models import Blog,Comment
 # Create your views here.
 # Function Based views
 @api_view(['GET','POST'])
@@ -57,66 +60,71 @@ def single_studentsView(request,id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # API Creation manually without mixins
-# class Employees(APIView):
-#     def get(self,request):
-#         employees=Employee.objects.all()
-#         serializer=EmployeeSerializers(employees,many=True)
-#         return Response(serializer.data,status=status.HTTP_200_OK)
+"""
+class Employees(APIView):
+    def get(self,request):
+        employees=Employee.objects.all()
+        serializer=EmployeeSerializers(employees,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
-#     def post(self,request):
-#         serializer=EmployeeSerializers(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def post(self,request):
+        serializer=EmployeeSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-# class Single_Employee(APIView):
-#     def get_employee(self,id):
-#         try:
-#             return Employee.objects.get(id=id)
-#         except Employee.DoesNotExist:
-#             raise Http404
-#     def get(self,request,id):
-#         employee=self.get_employee(id)
-#         serializer=EmployeeSerializers(employee)
-#         return Response(serializer.data,status=status.HTTP_200_OK)
-#     def put(self,requset,id):
-#         employee=self.get_employee(id)
-#         serializer=EmployeeSerializers(employee,data=requset.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_200_OK)
-#         else:
-#             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-#     def delete(self,requset,id):
-#         employee=self.get_employee(id)
-#         employee.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+class Single_Employee(APIView):
+    def get_employee(self,id):
+        try:
+            return Employee.objects.get(id=id)
+        except Employee.DoesNotExist:
+            raise Http404
+    def get(self,request,id):
+        employee=self.get_employee(id)
+        serializer=EmployeeSerializers(employee)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    def put(self,requset,id):
+        employee=self.get_employee(id)
+        serializer=EmployeeSerializers(employee,data=requset.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def delete(self,requset,id):
+        employee=self.get_employee(id)
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+"""
+
 
 # Using mixins:"Mixins DRF me chhoti-chhoti ready-made classes hoti hain jo GET, POST, PUT, DELETE jaise kaam asaani se karne deti hain bina pura code likhe."Ye tumhare views me CRUD functionality add karte hain reusability aur simplicity ke liye."
-# class Employees(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
-#     #variables ka name by default hota ha cant change the name
-#     queryset=Employee.objects.all()
-#     serializer_class= EmployeeSerializers
+"""
+class Employees(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    #variables ka name by default hota ha cant change the name
+    queryset=Employee.objects.all()
+    serializer_class= EmployeeSerializers
 
-#     def get(self,request):
-#         return self.list(request)
+    def get(self,request):
+        return self.list(request)
     
-#     def post(self,requset):
-#         return self.create(requset)
+    def post(self,requset):
+        return self.create(requset)
     
-# class Single_Employee(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
-#     queryset=Employee.objects.all()
-#     serializer_class= EmployeeSerializers
+class Single_Employee(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset=Employee.objects.all()
+    serializer_class= EmployeeSerializers
 
-#     def get(self,request,pk):# yahan pr pk hi by default use hoga manual apis me ham koi bhi naam daal skte ha but mixins me by default pk use krna padta ha
-#         return self.retrieve(request,pk)
+    def get(self,request,pk):# yahan pr pk hi by default use hoga manual apis me ham koi bhi naam daal skte ha but mixins me by default pk use krna padta ha
+        return self.retrieve(request,pk)
     
-#     def put(self,requset,pk):
-#         return self.update(requset,pk)
+    def put(self,requset,pk):
+        return self.update(requset,pk)
     
-#     def delete(self,request,pk):
-#         return self.destroy(request,pk)
+    def delete(self,request,pk):
+        return self.destroy(request,pk)
+"""
 
 
 # using Genrics :"Django REST Framework ke generics ready-made views hote hain jo common CRUD operations ke liye code aur short kar dete hain."Inme sab kuch built-in hota hai — tumhe sirf queryset aur serializer_class dena hota hai.
@@ -172,9 +180,23 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset=Employee.objects.all()
     serializer_class=EmployeeSerializers
 
+class BlogsView(generics.ListCreateAPIView):
+    queryset=Blog.objects.all()
+    serializer_class=BlogSerializer
 
+class CommentsView(generics.ListCreateAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=CommentSerializer
 
+class DetailedBlogsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Blog.objects.all()
+    serializer_class=BlogSerializer
+    lookup_field='pk'
 
+class DetailedCommentsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=CommentSerializer
+    lookup_field='pk'
 
 
 

@@ -14,5 +14,10 @@ urlpatterns = [
 
     # path('Employees/',views.Employees.as_view()),#class based views
     # path('Employees/<int:pk>/',views.Single_Employee.as_view())#class based views
-    path('',include(router.urls))
+    path('',include(router.urls)),
+
+    path('Blogs/',views.BlogsView.as_view()),
+    path('Blogs/<int:pk>/',views.DetailedBlogsView.as_view()),
+    path('Comments/',views.CommentsView.as_view()),
+    path('Comments/<int:pk>/',views.DetailedCommentsView.as_view()),
 ]
